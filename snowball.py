@@ -1,5 +1,7 @@
 from math import sqrt
 from pyglet import shapes
+from present import Present
+from solid import Solid
 
 class Snowball:
     def __init__(self, src, dest, speed):
@@ -16,8 +18,8 @@ class Snowball:
         chunk = int(((self.x + grid.x) // (grid.chunkSizeX * grid.cellSize) + grid.startIndex) % grid.maxChunks)
         cellX = int(((self.x + grid.x) // grid.cellSize) % grid.chunkSizeX)
         cellY = int(self.y // grid.cellSize)
-        if isinstance(grid.chunks[chunk][cellX][cellY], shapes.Rectangle):
-            return True
+        if isinstance(grid.chunks[chunk][cellX][cellY], Solid):
+           return True
         cellsToCheck = []
         cell = None
         # top
@@ -27,18 +29,18 @@ class Snowball:
                 cell = grid.chunks[chunk][cellX - 1][cellY + 1]
             else:
                 cell = grid.chunks[chunk][grid.chunkSizeX - 1][cellY + 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, cell.x + cell.width, cell.y))
             # top right
             if cellX + 1 <= grid.chunkSizeX - 1:
                 cell = grid.chunks[chunk][cellX + 1][cellY + 1]
             else:
                 cell = grid.chunks[(chunk + 1) % grid.maxChunks][0][cellY + 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, cell.x, cell.y))
             # top
             cell = grid.chunks[chunk][cellX][cellY + 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, self.x, cell.y))
         # bottom
         if cellY - 1 >= 0:
@@ -47,32 +49,32 @@ class Snowball:
                 cell = grid.chunks[chunk][cellX - 1][cellY - 1]
             else:
                 cell = grid.chunks[(chunk - 1) % grid.maxChunks][grid.chunkSizeX - 1][cellY - 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, cell.x + cell.width, cell.y))
             # bottom right
             if cellX + 1 <= grid.chunkSizeX - 1:
                 cell = grid.chunks[chunk][cellX + 1][cellY - 1]
             else:
                 cell = grid.chunks[(chunk + 1) % grid.maxChunks][0][cellY - 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, cell.x, cell.y))
             # bottom
             cell = grid.chunks[chunk][cellX][cellY - 1]
-            if isinstance(cell, shapes.Rectangle):
+            if isinstance(cell, Solid):
                 cellsToCheck.append((cell, self.x, cell.y + cell.height))
         # left
         if cellX - 1 >= 0:
             cell = grid.chunks[chunk][cellX - 1][cellY]
         else:
             cell = grid.chunks[(chunk - 1) % grid.maxChunks][grid.chunkSizeX - 1][cellY]
-        if isinstance(cell, shapes.Rectangle):
+        if isinstance(cell, Solid):
             cellsToCheck.append((cell, cell.x + cell.width, self.y))
         # right
         if cellX + 1 <= grid.chunkSizeX - 1:
             cell = grid.chunks[chunk][cellX + 1][cellY]
         else:
             cell = grid.chunks[(chunk + 1) % grid.maxChunks][0][cellY]
-        if isinstance(cell, shapes.Rectangle):
+        if isinstance(cell, Solid):
             cellsToCheck.append((cell, cell.x, self.y))
         for cell in cellsToCheck:
             dx = cell[1] - self.x
