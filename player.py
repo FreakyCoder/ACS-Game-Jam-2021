@@ -9,7 +9,7 @@ class Player(Sprite):
         img.width, img.height = radius, radius
         img.anchor_x, img.anchor_y = radius // 2, radius // 2
         super().__init__(img=img, x=x, y=y)
-    def collides(self, grid):
+    def collides(self, grid, spikes):
         presents = 0
         solid = False
         chunk = int(((self.x + grid.x) // (grid.chunkSizeX * grid.cellSize) + grid.startIndex) % grid.maxChunks)
@@ -85,4 +85,22 @@ class Player(Sprite):
                 else:
                     presents += 1
                     grid.destroyCell(cell[0][1], cell[0][2], cell[0][3])
+        # spikes
+        for spike in spikes:
+            x1, y1 = spike.x, spike.y
+            x2, y2 = spike.x - spike.width // 2, spike.y + spike.height
+            x3, y3 = spike.x + spike.width // 2, spike.y + spike.height
+            dx = x1 - self.x
+            dy = y1 - self.y
+            if sqrt(dx * dx + dy * dy) < self.radius:
+                return (True, presents)
+            dx = x2 - self.x
+            dy = y2 - self.y
+            if sqrt(dx * dx + dy * dy) < self.radius:
+                return (True, presents)
+            dx = x3 - self.x
+            dy = y3 - self.y
+            if sqrt(dx * dx + dy * dy) < self.radius:
+                return (True, presents)
+             
         return (solid, presents)

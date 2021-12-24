@@ -17,11 +17,13 @@ class All:
         self.current_scene = 'intro'
         self.scenes = {
             'intro': IntroEventHandler(self.window, self.start_game, self.mediaPlayer, music=self.loader.media('epic.wav', streaming=False)),
-            'game': GameEventHandler(self.window, self.end_game, self.mediaPlayer, self.loader.image('santa.png'), self.loader.image('present.png'), self.loader.image('ice.png'), self.loader.media('music.wav', streaming=False)),
+            'game': GameEventHandler(self.window, self.end_game, self.mediaPlayer, self.loader.image('santa.png'), self.loader.image('present.png'), self.loader.image('ice.png'), self.loader.image('spike.png'), self.loader.media('music.wav', streaming=False)),
             'end': EndEventHandler(self.window, self.start_game)
         }
         self.window.push_handlers(self.scenes[self.current_scene])
         self.scenes[self.current_scene].start()
+        print('Music by bensound.com and tones.wolfram.com')
+        print('Spike asset by pinclipart.com')
         pyglet.app.run()
     def start_game(self):
         self.scenes[self.current_scene].end()
